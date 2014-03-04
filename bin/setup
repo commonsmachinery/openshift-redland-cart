@@ -41,5 +41,10 @@ then
     exit 0
 else
     client_error "Redland build failed"
+
+    # save away the build catalog for inspection, it'll be removed by Openshift when we exit this script
+    rm -rf "$TMP/failed-redland-build"
+    cp -a "$destdir" "$TMP/failed-redland-build"
+
     exit 1
 fi
