@@ -36,6 +36,10 @@ mkdir -p "$builddir"
 PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$destdir/lib/pkgconfig"
 export PKG_CONFIG_PATH
 
+# But it seems we must give the linker a hand, still
+LDFLAGS="-L$destdir/lib"
+export LDFLAGS
+
 exec >"$destdir/build.log" 2>&1
 
 cd "$builddir"
@@ -62,8 +66,7 @@ make install
 cd "$builddir"
 tar xzf "$srcdir/$bindings.tar.gz"
 cd "$bindings"
-./configure --prefix="$destdir" --disable-static --disable-dependency-tracking
-    --with-python
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --with-python
 make
 
 # Do manual install, since we won't put this into the system python
