@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -e
+set -u
+
+source $OPENSHIFT_CARTRIDGE_SDK_BASH
+
+# TODO: use version argument or manifest file
+version=1.0.17
+
+srcdir="$OPENSHIFT_REDLAND_DIR/usr/src"
+buildscript="$srcdir/build-redland"
+versiondefs="$srcdir/version-$version"
+
+destdir="$OPENSHIFT_REDLAND_DIR/versions/$version"
+readyfile="$destdir/.redland-ready"
+
+if [ ! -f "$versiondefs" ]
+then
+    client_error "Unknown Redland cartridge version: $version"
+    exit 1
+fi
+
+if [ -f "$readyfile" ]
+then
+    client_result "Redland cartridge $version already setup in $destdir"
+    exit 0
+fi
+
+rm -rf "$destdir"
+mkdir -p "$destdir"
+
+if "$buildscript" "$srcdir" "$versiondefs" "$destdir"
+then
+    echo "$destdir/bin" > "$OPENSHIFT_REDLAND_DIR/env/OPENSHIFT_REDLAND_PATH_ELEMENT"
+    echo "$destdir/lib" > "$OPENSHIFT_REDLAND_DIR/env/OPENSHIFT_REDLAND_LD_LIBRARY_PATH"
+    echo "$destdir/lib/pkgconfig" > "$OPENSHIFT_REDLAND_DIR/env/OPENSHIFT_REDLAND_PKG_CONFIG_PATH"
+    echo "$destdir/python" > "$OPENSHIFT_REDLAND_DIR/env/OPENSHIFT_REDLAND_PYTHONPATH"
+    touch "$readyfile"
+    client_result "Redland cartridge $version ready in $destdir"
+    exit 0
+else
+    client_error "Redland build failed"
+    exit 1
+fi

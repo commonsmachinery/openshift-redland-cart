@@ -1,0 +1,4 @@
+raptor="raptor2-2.0.13"
+rasqal="rasqal-0.9.32"
+redland="redland-1.0.17"
+bindings="redland-bindings-1.0.16.1"

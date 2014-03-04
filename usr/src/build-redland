@@ -1,0 +1,76 @@
+#!/bin/sh
+
+set -e
+set -u
+
+srcdir="$1"
+versions="$2"
+destdir="$3"
+
+if [ ! -d "$srcdir" ]
+then
+    echo "Missing source dir: $srcdir" >&2
+    exit 1
+fi    
+
+if [ ! -d "$destdir" ]
+then
+    echo "Missing dest dir: $destdir" >&2
+    exit 1
+fi    
+
+. "$versions"
+
+if [ -z "$raptor" -o -z "$rasqal" -o -z "$redland" -o -z "$bindings" ]
+then
+    echo "Missing version info" >&2
+    exit 1
+fi    
+
+builddir="$destdir/build"
+
+rm -rf "$builddir"
+mkdir -p "$builddir"
+
+# Help configure below find the packages as they are built
+PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$destdir/lib/pkgconfig"
+export PKG_CONFIG_PATH
+
+(
+cd "$builddir"
+tar xzvf "$srcdir/$raptor.tar.gz"
+cd "$raptor"
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules
+make
+make install
+
+cd "$builddir"
+tar xzvf "$srcdir/$rasqal.tar.gz"
+cd "$rasqal"
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules
+make
+make install
+
+cd "$builddir"
+tar xzvf "$srcdir/$redland.tar.gz"
+cd "$redland"
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules
+make
+make install
+
+cd "$builddir"
+tar xzvf "$srcdir/$bindings.tar.gz"
+cd "$bindings"
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules \
+    --with-python
+make
+
+# Do manual install, since we won't put this into the system python
+mkdir "$destdir/python"
+cp -va python/Redland.so python/RDF.py "$destdir/python"
+
+) 2>&1 | tee "$destdir/build.log"
+
+# Get rid of builddir and the documentation
+rm -rf "$builddir"
+rm -rf "$destdir/share/gtk-doc"

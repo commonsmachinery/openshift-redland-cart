@@ -1,0 +1,12 @@
+locked_files:
+- bin/
+- bin/*
+- env/
+- env/*
+- versions/
+- versions/*
+setup_rewritten:
+- env/OPENSHIFT_REDLAND_PATH_ELEMENT
+- env/OPENSHIFT_REDLAND_LD_LIBRARY_PATH
+- env/OPENSHIFT_REDLAND_PKG_CONFIG_PATH
+- env/OPENSHIFT_REDLAND_PYTHONPATH 

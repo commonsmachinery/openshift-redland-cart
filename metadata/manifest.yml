@@ -1,0 +1,34 @@
+Name: redland
+Cartridge-Short-Name: REDLAND
+Cartridge-Version: '1.0.0'
+Compatible-Versions:
+  - '1.0.0'
+Cartridge-Vendor: commonsmachinery
+Categories:
+  - plugin
+  - RDF
+Group-Overrides:
+  - components:
+    - web_framework
+    - redland
+Source-Url: https://github.com/commonsmachinery/openshift-redland-cart.git
+Display-Name: Redland RDF libraries
+Description: Libraries with Python bindings for working with RDF data.
+Version: '1.0.17'
+Versions:
+  - '1.0.17'
+License: 'Apache License v2.0'
+License-Url: http://librdf.org/LICENSE.html
+Vendor: David Becket
+Website: http://librdf.org/
+Provides:
+  - libraptor2
+  - librasqal
+  - librdf
+  - RDF.py
+Scaling:
+  Min: 1
+  Max: -1
+  
+
+
