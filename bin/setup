@@ -10,7 +10,7 @@ version=1.0.17
 
 srcdir="$OPENSHIFT_REDLAND_DIR/usr/src"
 buildscript="$srcdir/build-redland"
-versiondefs="$srcdir/version-$version"
+versiondefs="$srcdir/versions-$version"
 
 destdir="$OPENSHIFT_REDLAND_DIR/versions/$version"
 readyfile="$destdir/.redland-ready"
