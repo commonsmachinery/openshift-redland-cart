@@ -36,40 +36,39 @@ mkdir -p "$builddir"
 PKG_CONFIG_PATH="${PKG_CONFIG_PATH:+$PKG_CONFIG_PATH:}$destdir/lib/pkgconfig"
 export PKG_CONFIG_PATH
 
-(
+exec >"$destdir/build.log" 2>&1
+
 cd "$builddir"
-tar xzvf "$srcdir/$raptor.tar.gz"
+tar xzf "$srcdir/$raptor.tar.gz"
 cd "$raptor"
-./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking
 make
 make install
 
 cd "$builddir"
-tar xzvf "$srcdir/$rasqal.tar.gz"
+tar xzf "$srcdir/$rasqal.tar.gz"
 cd "$rasqal"
-./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking
 make
 make install
 
 cd "$builddir"
-tar xzvf "$srcdir/$redland.tar.gz"
+tar xzf "$srcdir/$redland.tar.gz"
 cd "$redland"
-./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking
 make
 make install
 
 cd "$builddir"
-tar xzvf "$srcdir/$bindings.tar.gz"
+tar xzf "$srcdir/$bindings.tar.gz"
 cd "$bindings"
-./configure --prefix="$destdir" --disable-static --disable-dependency-tracking --enable-silent-rules \
+./configure --prefix="$destdir" --disable-static --disable-dependency-tracking
     --with-python
 make
 
 # Do manual install, since we won't put this into the system python
 mkdir "$destdir/python"
 cp -va python/Redland.so python/RDF.py "$destdir/python"
-
-) 2>&1 | tee "$destdir/build.log"
 
 # Get rid of builddir and the documentation
 rm -rf "$builddir"
